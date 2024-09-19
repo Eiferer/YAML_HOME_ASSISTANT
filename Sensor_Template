@@ -1,0 +1,30 @@
+#Water Tank Level
+sensor:
+  - platform: template
+    sensors:
+        water_tank:
+            friendly_name: "Water Tank Level"
+            value_template: "{{ xxxx | float - (states('sensor.xxxxxxx') | float) }}"
+            unit_of_measurement: "cm"
+#% of Water Tank
+  - platform: template
+    sensors:
+        water_tank_perc:
+            friendly_name: "Water Tank Perc"
+            value_template: "{{ (((states('sensor.xxxxxxx')  | float |round(1) / xxxx | float |round(1))) *100 | float) |round(0)  }}"
+            unit_of_measurement: "%"
+# PV_TOTAL
+  - platform: template
+    sensors:
+        pv_total:
+            friendly_name: "PV Total"
+            value_template: "{{ ((states('sensor.pv1xxxxxxxx'))  | float) + ((states('sensor.pv1xxxxxxxx'))  | float) }}"
+            unit_of_measurement: "kw"
+
+# PV_Difference
+  - platform: template
+    sensors:
+        pv_div:
+            friendly_name: "PV Diff"
+            value_template: "{{ ((states('sensor.pv_total'))  | float)  - ((states('sensor.xxxxxxx'))  | float) }}"
+            unit_of_measurement: "kw"
