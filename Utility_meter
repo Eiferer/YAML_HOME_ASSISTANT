@@ -1,0 +1,15 @@
+#Utility_meter 
+  waterflow_daily:
+    source: sensor.xxxxxxx
+    name: Daily Water
+    cycle: daily
+    
+  waterflow_weekly:
+    source: sensor.xxxxxxxxxx
+    name: Weekly Water
+    cycle: weekly
+    
+  waterflow_monthly:
+    source: sensor.xxxxxxxxxxx
+    name: Monthly Water
+    cycle: monthly
