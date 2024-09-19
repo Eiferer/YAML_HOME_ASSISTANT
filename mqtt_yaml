@@ -1,0 +1,33 @@
+sensor:
+    - name: "Lorawan WaterLevel"
+      state_topic: "tele/milesight/24e124126d440077"
+      value_template: "{{ value_json.water_level }}"
+      unit_of_measurement: "cm"
+
+    - name: "Lorawan sonarsensor"
+      state_topic: "tele/milesight/24e124713c483603"
+      value_template: "{{ value_json.distance }}"
+      unit_of_measurement: "mm"
+
+    - name: "Lorawan water pressure"
+      state_topic: "tele/milesight/24e124126c320641"
+      value_template: "{{ value_json.pressure }}"
+      unit_of_measurement: "bar"
+
+    - name: "Lorawan water leak"
+      state_topic: "tele/milesight/24e124136c453970"
+      value_template: "{{ value_json.leakage_status }}"
+
+    - name: "Lorawan humidity"
+      state_topic: "tele/milesight/24e124136c453970"
+      value_template: "{{ value_json.humidity }}"
+      unit_of_measurement: "%"
+
+    - name: "Lorawan temperature"
+      state_topic: "tele/milesight/24e124136c453970"
+      value_template: "{{ value_json.temperature }}"
+      unit_of_measurement: "°C"
+
+    - name: "WaterFlow_mqtt"
+      state_topic: "waterflow-eiferer/sensor/flow_rate/state"
+      unit_of_measurement: "L"
