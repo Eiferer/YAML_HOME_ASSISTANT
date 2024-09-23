@@ -1,4 +1,5 @@
 #Utility_meter 
+utility_meter:
   waterflow_daily:
     source: sensor.xxxxxxx
     name: Daily Water
