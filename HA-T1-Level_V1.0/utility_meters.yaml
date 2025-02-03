@@ -1,0 +1,53 @@
+  pv1_hourly:
+    source: sensor.pv1_real_number
+    cycle: hourly
+
+  pv2_hourly:
+    source: sensor.pv2_real_number
+    cycle: hourly
+
+  total_pv_hourly:
+    source: sensor.total_pv_power
+    cycle: hourly
+
+  pv1_daily:
+    source: sensor.pv1_real_number
+    cycle: daily
+
+  pv2_daily:
+    source: sensor.pv2_real_number
+    cycle: daily
+
+  total_pv_daily:
+    source: sensor.total_pv_power
+    cycle: daily
+
+  pv1_monthly:
+    source: sensor.pv1_real_number
+    cycle: monthly
+
+  pv2_monthly:
+    source: sensor.pv2_real_number
+    cycle: monthly
+
+  total_pv_monthly:
+    source: sensor.total_pv_power
+    cycle: monthly
+
+  pv1_yearly:
+    source: sensor.pv1_real_number
+    cycle: yearly
+
+  pv2_yearly:
+    source: sensor.pv2_real_number
+    cycle: yearly
+
+  total_pv_yearly:
+    source: sensor.total_pv_power
+    cycle: yearly
+    
+  monthly_grid_import:
+    source: sensor.solarsynk_2105314482_day_grid_import
+    cycle: monthly
+
+    

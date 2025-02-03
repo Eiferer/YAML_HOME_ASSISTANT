@@ -1,0 +1,113 @@
+#Editable items
+  - sensor:
+      - name: "Battery SOC Real Number"
+        unique_id: battery_soc_real_number
+        state: >-
+          {{ states('sensor.solarsynk_2105314482_battery_soc') | float(0) }}
+          
+      - name: "PV1 Real Number"
+        unique_id: pv1_real_number
+        state: >-
+          {{ states('sensor.solarsynk_2105314482_pv1_power') | float(0) }}
+
+      - name: "PV2 Real Number"
+        unique_id: pv2_real_number
+        state: >-
+          {{ states('sensor.solarsynk_2105314482_pv2_power') | float(0) }}
+
+
+# do not edit
+      - name: "Battery SOC Level"
+        unique_id: battery_soc_level
+        state: >-
+          {% set soc = states('sensor.battery_soc_real_number') %}
+          {% set max_soc = states('input_number.max_soc') | float(0) %}
+          {% set low_soc = states('input_number.low_soc') | float(0) %}
+          
+          {% if soc in ['unavailable', 'unknown'] %}
+            network issue
+          {% else %}
+            {% set soc = soc | float(0) %}
+            {% if soc == 0 %}
+              critical
+            {% elif soc > max_soc %}
+              high
+            {% elif soc < low_soc and soc != 0 %}
+              low
+            {% else %}
+              medium
+            {% endif %}
+          {% endif %}
+          
+      - name: "pv_power_level"
+        state: >
+          {% set pv_power = states('sensor.total_pv_power')|float(0) %}
+          {% set high = states('input_number.high_pv')|float(0) %}
+          {% set med = states('input_number.med_pv')|float(0) %}
+          {% set low = states('input_number.low_pv')|float(0) %}
+
+          {% if pv_power > high %}
+            high
+          {% elif pv_power > med %}
+            med-high
+          {% elif pv_power > low %}
+            med-low
+          {% else %}
+            low
+          {% endif %}
+          
+
+      - name: "Total PV Power"
+        unique_id: total_pv_power
+        unit_of_measurement: "W"
+        state: >-
+          {% set pv1 = states('sensor.pv1_real_number') | float(0) %}
+          {% set pv2 = states('sensor.pv2_real_number') | float(0) %}
+          {{ pv1 + pv2 }}
+
+      - name: "PV Power Difference Percentage"
+        unique_id: pv_power_difference_percentage
+        unit_of_measurement: "%"
+        state: >
+          {% set pv1 = states('sensor.pv1_real_number')|float(0) %}
+          {% set pv2 = states('sensor.pv2_real_number')|float(0) %}
+          {% set battery_soc = states('sensor.battery_soc_real_number')|float(0) %}
+
+          {% if battery_soc > 98 %}
+            0
+          {% elif pv1 + pv2 == 0 %}
+            0
+          {% else %}
+            {{ ((pv1 - pv2) / ((pv1 + pv2) / 2) * 100) | round(2) }}
+          {% endif %}
+
+  - sensor:
+      - name: "Monthly Electricity Cost"
+        unique_id: monthly_electricity_cost
+        unit_of_measurement: "ZAR"
+        state: >
+          {% set usage = states('sensor.monthly_grid_import') | float(0) %}
+          {% set price = states('sensor.eskom_electricity_price') | float(0) %}
+          {% set extra_price = states('sensor.eskom_electricity_price_extra') | float(0) %}
+
+          {% if usage <= 600 %}
+            {{ usage * price }}
+          {% else %}
+            {{ (600 * price) + ((usage - 600) * extra_price) }}
+          {% endif %}
+          
+  - sensor:
+      - name: "PV Monthly generated"
+        unique_id: pv_monthly_generated_cost
+        unit_of_measurement: "ZAR"
+        state: >
+          {% set usage = states('sensor.total_pv_monthly') | float(0) /1000 %}
+          {% set price = states('sensor.eskom_electricity_price') | float(0) %}
+          {% set extra_price = states('sensor.eskom_electricity_price_extra') | float(0) %}
+
+          {% if usage <= 600 %}
+            {{ usage * price }}
+          {% else %}
+            {{ (600 * price) + ((usage - 600) * extra_price) }}
+          {% endif %}
+

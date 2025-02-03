@@ -1,0 +1,109 @@
+  - alias: "Update PV1 Max Ever Recorded"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.pv1_real_number
+    condition:
+      - condition: template
+        value_template: "{{ states('sensor.pv1_real_number') | float(0) > states('input_number.pv1_max_ever') | float(0) }}"
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.pv1_max_ever
+          value: "{{ states('sensor.pv1_real_number') | float(0) }}"
+          
+  - alias: "Update PV2 Max Ever Recorded"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.pv2_real_number
+    condition:
+      - condition: template
+        value_template: "{{ states('sensor.pv2_real_number') | float(0) > states('input_number.pv2_max_ever') | float(0) }}"
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.pv2_max_ever
+          value: "{{ states('sensor.pv2_real_number') | float(0) }}"
+          
+  - alias: "Update PV Max Ever Recorded"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.total_pv_power
+    condition:
+      - condition: template
+        value_template: "{{ states('sensor.total_pv_power') | float(0) > states('input_number.pv_max_ever') | float(0) }}"
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.pv_max_ever
+          value: "{{ states('sensor.total_pv_power') | float(0) }}"
+          
+          
+          
+          
+  - alias: "Update PV1 Daily Max Ever Recorded"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: utility_meter.pv1_daily
+    condition:
+      - condition: template
+        value_template: "{{ states('utility_meter.pv1_daily') | float(0) > states('input_number.pv1_max_ever') | float(0) }}"
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.pv1_max_ever
+          value: "{{ states('utility_meter.pv1_daily') | float(0) }}"
+          
+  - alias: "Update PV2 Daily Max Ever Recorded"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: utility_meter.pv2_daily
+    condition:
+      - condition: template
+        value_template: "{{ states('utility_meter.pv2_daily') | float(0) > states('input_number.pv2_max_ever') | float(0) }}"
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.pv2_max_ever
+          value: "{{ states('utility_meter.pv2_daily') | float(0) }}"
+          
+  - alias: "Update PV Daily Max Ever Recorded"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: utility_meter.total_pv_daily
+    condition:
+      - condition: template
+        value_template: "{{ states('utility_meter.total_pv_daily') | float(0) > states('input_number.pv_max_ever') | float(0) }}"
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.pv_max_ever
+          value: "{{ states('utility_meter.total_pv_daily') | float(0) }}"
+          
+          
+  - alias: "Accumulate Geyser Runtime"
+    description: "Count time when geyser is on, geyser power is on, and battery > 98%"
+    mode: single
+    trigger:
+      - platform: time_pattern
+        minutes: "/1"  # Runs every minute
+    condition:
+      - condition: state
+        entity_id: switch.geyser
+        state: "on"
+      - condition: state
+        entity_id: input_number.geyser_power
+        above: 0
+      - condition: numeric_state
+        entity_id: input_number.battery
+        above: 98
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.geyser_accumulated_time
+          value: "{{ states('input_number.geyser_accumulated_time') | float(0) + 1 }}"

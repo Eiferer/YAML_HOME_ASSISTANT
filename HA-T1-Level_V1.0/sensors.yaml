@@ -1,0 +1,63 @@
+  - platform: template
+    sensors:
+      pv1_hourly_average_8am_5pm:
+        friendly_name: "PV1 Hourly Average (8AM-5PM)"
+        unit_of_measurement: "W"
+        value_template: >
+          {% set hourly_values = states.sensor | selectattr('entity_id', 'search', 'utility_meter.pv1_hourly') | selectattr('last_updated', 'is_defined') | selectattr('last_updated.hour', '>=', 8) | selectattr('last_updated.hour', '<=', 17) | map(attribute='state') | map('float', 0) | list %}
+          {% if hourly_values | count > 0 %}
+            {{ (hourly_values | sum / hourly_values | count) | round(2) }}
+          {% else %}
+            0
+          {% endif %}
+
+  - platform: template
+    sensors:
+      pv2_hourly_average_8am_5pm:
+        friendly_name: "PV2 Hourly Average (8AM-5PM)"
+        unit_of_measurement: "W"
+        value_template: >
+          {% set hourly_values = states.sensor | selectattr('entity_id', 'search', 'utility_meter.pv2_hourly') | selectattr('last_updated', 'is_defined') | selectattr('last_updated.hour', '>=', 8) | selectattr('last_updated.hour', '<=', 17) | map(attribute='state') | map('float', 0) | list %}
+          {% if hourly_values | count > 0 %}
+            {{ (hourly_values | sum / hourly_values | count) | round(2) }}
+          {% else %}
+            0
+          {% endif %}
+
+  - platform: statistics
+    name: "PV1 Max for the Day"
+    entity_id: sensor.pv1_real_number
+    state_characteristic: value_max  # Tracks the highest recorded value
+    sampling_size: 1000  # Adjust based on expected number of updates
+    max_age:
+      hours: 24  # Keeps only the last 24 hours of data
+
+  - platform: statistics
+    name: "PV2 Max for the Day"
+    entity_id: sensor.pv2_real_number
+    state_characteristic: value_max  # Tracks the highest recorded value
+    sampling_size: 1000  # Adjust based on expected number of updates
+    max_age:
+      hours: 24  # Keeps only the last 24 hours of data
+      
+  - platform: statistics
+    name: "PV Total for the Day"
+    entity_id: sensor.total_pv_power
+    state_characteristic: value_max  # Tracks the highest recorded value
+    sampling_size: 1000  # Adjust based on expected number of updates
+    max_age:
+      hours: 24  # Keeps only the last 24 hours of data      
+      
+  - platform: template
+    sensors:
+      eskom_electricity_price:
+        friendly_name: "Eskom Electricity Price"
+        unit_of_measurement: "ZAR/kWh"
+        value_template: "{{ 2.67 }}"
+
+  - platform: template
+    sensors:
+      eskom_electricity_price_extra:
+        friendly_name: "Eskom Electricity Price over max"
+        unit_of_measurement: "ZAR/kWh"
+        value_template: "{{ 4.54 }}"
