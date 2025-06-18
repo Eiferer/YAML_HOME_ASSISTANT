@@ -1,0 +1,13 @@
+# Device ID for SolarSynk or Solarman dongle
+solar_device_id:
+  name: Solar Device ID
+  initial: '2105314482'
+  max: 20
+
+# Format prefix (e.g., sensor.solarsynk_)
+solar_prefix:
+  name: Solar Sensor Prefix
+  initial: 'sensor.solarsynk_'
+  max: 30
+  
+  
